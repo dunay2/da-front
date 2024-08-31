@@ -26,7 +26,7 @@
           v-for="component in tabs.find(tab => tab.id === activeTab).components"
           :is="getComponentType(component.type)"
           :key="component.id"
-          :table="component"
+          :componentData="component"
           @update-position="updateComponentPosition"
           @update-size="updateComponentSize"
           @open-config="openComponentConfig"
@@ -41,7 +41,7 @@
     <!-- Add a modal for component configuration -->
     <div v-if="selectedComponent" class="modal">
       <h2>Configure {{ selectedComponent.type }}</h2>
-      <input v-model="selectedComponent.data.name" placeholder="Component Name" />
+      <input v-model="selectedComponent.name" placeholder="Component Name" />
       <!-- Add other configuration options here -->
       <button @click="closeModal">Close</button>
     </div>
@@ -52,21 +52,23 @@
 import "./../assets/css/CanvasMain.css";
 import FloatingMenu from './FloatingMenu.vue';
 import TableComponent from './TableComponent.vue';
+import ViewComponent from './ViewComponent.vue';
 
 export default {
   name: "CanvasMain",
   components: {
     FloatingMenu,
-    TableComponent
+    TableComponent,
+    ViewComponent
   },
   data() {
     return {
       tabs: [
-        { id: 1, name: "Tab 1", components: [] } // Example initial tab
+        { id: 1, name: "Tab 1", components: [] }
       ],
-      activeTab: 1, // ID of the currently active tab
-      nextTabId: 2, // ID for the next new tab
-      selectedComponent: null // Holds the currently selected component for configuration
+      activeTab: 1,
+      nextTabId: 2,
+      selectedComponent: null
     };
   },
   methods: {
@@ -77,41 +79,47 @@ export default {
         components: []
       };
       this.tabs.push(newTab);
-      this.activeTab = newTab.id; // Automatically switch to the new tab
+      this.activeTab = newTab.id;
       this.nextTabId++;
     },
     setActiveTab(tabId) {
       this.activeTab = tabId;
-      this.selectedComponent = null; // Reset selected component when switching tabs
+      this.selectedComponent = null;
     },
     getActiveTabName() {
       const activeTab = this.tabs.find(tab => tab.id === this.activeTab);
       return activeTab ? activeTab.name : "";
     },
     addComponent(componentType) {
-      console.log(`Adding component of type: ${componentType}`);
       const activeTab = this.tabs.find(tab => tab.id === this.activeTab);
       if (activeTab) {
         const newComponent = {
           id: `comp-${Date.now()}`,
           type: componentType,
-          data: {
-            x: 0,  // Initial X position
-            y: 0,  // Initial Y position
-            w: 300, // Initial width
-            h: 150, // Initial height
-            name: '',
-            columns: []
-          }
+          x: 0,
+          y: 0,
+          w: 300,
+          h: 150,
+          name: '',
+          columns: []
         };
+
         if (componentType === 'Table') {
-          newComponent.data.name = `Table ${activeTab.components.length + 1}`;
-          newComponent.data.columns = [
+          newComponent.name = `Table ${activeTab.components.length + 1}`;
+          newComponent.columns = [
             { name: 'id', type: 'int' },
             { name: 'name', type: 'varchar' },
             { name: 'created_at', type: 'timestamp' }
           ];
+        } else if (componentType === 'View') {
+          newComponent.name = `View ${activeTab.components.length + 1}`;
+          newComponent.columns = [
+            { name: 'column1', type: 'varchar' },
+            { name: 'column2', type: 'int' },
+            { name: 'column3', type: 'timestamp' }
+          ];
         }
+
         activeTab.components.push(newComponent);
       }
     },
@@ -119,6 +127,8 @@ export default {
       switch (type) {
         case 'Table':
           return 'TableComponent';
+        case 'View':
+          return 'ViewComponent';
         default:
           return null;
       }
@@ -127,20 +137,22 @@ export default {
       const activeTab = this.tabs.find(tab => tab.id === this.activeTab);
       const component = activeTab.components.find(c => c.id === componentId);
       if (component) {
-        component.data.x = x;
-        component.data.y = y;
+        component.x = x;
+        component.y = y;
       }
     },
     updateComponentSize(componentId, w, h) {
       const activeTab = this.tabs.find(tab => tab.id === this.activeTab);
       const component = activeTab.components.find(c => c.id === componentId);
       if (component) {
-        component.data.w = w;
-        component.data.h = h;
+        component.w = w;
+        component.h = h;
       }
     },
     openComponentConfig(component) {
-      this.selectedComponent = component;
+      if (component) {
+        this.selectedComponent = component;
+      }
     },
     closeModal() {
       this.selectedComponent = null;
