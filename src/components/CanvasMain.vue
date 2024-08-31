@@ -18,7 +18,17 @@
 
     <div class="canvas-content">
       <!-- Display content based on the active tab -->
-      <p v-if="activeTab">You're viewing {{ getActiveTabName() }}</p>
+      <div v-if="activeTab">
+        <p>You're viewing {{ getActiveTabName() }}</p>
+
+        <!-- Loop through components and display them -->
+        <component
+          v-for="component in tabs.find(tab => tab.id === activeTab).components"
+          :is="getComponentType(component.type)"
+          :key="component.id"
+          :table="component.data"
+        />
+      </div>
       <p v-else>Welcome to the Canvas! Start by adding a component.</p>
     </div>
 
@@ -28,14 +38,15 @@
 </template>
 
 <script>
-
 import "./../assets/css/CanvasMain.css";
 import FloatingMenu from './FloatingMenu.vue';
+import TableComponent from './TableComponent.vue';
 
 export default {
   name: "CanvasMain",
   components: {
-    FloatingMenu
+    FloatingMenu,
+    TableComponent
   },
   data() {
     return {
@@ -66,7 +77,33 @@ export default {
     },
     addComponent(componentType) {
       console.log(`Adding component of type: ${componentType}`);
-      // Logic to add the component to the active tab's canvas area
+      const activeTab = this.tabs.find(tab => tab.id === this.activeTab);
+      if (activeTab) {
+        const newComponent = {
+          id: `comp-${Date.now()}`,
+          type: componentType,
+          data: {}
+        };
+        if (componentType === 'Table') {
+          newComponent.data = {
+            name: `Table ${activeTab.components.length + 1}`,
+            columns: [
+              { name: 'id', type: 'int' },
+              { name: 'name', type: 'varchar' },
+              { name: 'created_at', type: 'timestamp' }
+            ]
+          };
+        }
+        activeTab.components.push(newComponent);
+      }
+    },
+    getComponentType(type) {
+      switch (type) {
+        case 'Table':
+          return 'TableComponent';
+        default:
+          return null;
+      }
     }
   }
 };
