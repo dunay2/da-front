@@ -21,14 +21,22 @@
       <p v-if="activeTab">You're viewing {{ getActiveTabName() }}</p>
       <p v-else>Welcome to the Canvas! Start by adding a component.</p>
     </div>
+
+    <!-- Add the Floating Menu here -->
+    <FloatingMenu @add-component="addComponent" />
   </div>
 </template>
 
 <script>
+
 import "./../assets/css/CanvasMain.css";
+import FloatingMenu from './FloatingMenu.vue';
 
 export default {
   name: "CanvasMain",
+  components: {
+    FloatingMenu
+  },
   data() {
     return {
       tabs: [
@@ -57,7 +65,8 @@ export default {
       return activeTab ? activeTab.name : "";
     },
     addComponent(componentType) {
-      console.log(componentType);
+      console.log(`Adding component of type: ${componentType}`);
+      // Logic to add the component to the active tab's canvas area
     }
   }
 };
