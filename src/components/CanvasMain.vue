@@ -1,32 +1,60 @@
 <template>
   <div class="canvas-main">
     <div class="tabs">
-      <!-- Placeholder for tabs -->
-      <span>Tabs will appear here</span>
+      <!-- Button to add new tabs -->
+      <button @click="addTab">+ New Tab</button>
+
+      <!-- Render each tab -->
+      <div
+        v-for="tab in tabs"
+        :key="tab.id"
+        class="tab"
+        :class="{ active: tab.id === activeTab }"
+        @click="setActiveTab(tab.id)"
+      >
+        {{ tab.name }}
+      </div>
     </div>
+
     <div class="canvas-content">
-      <!-- Placeholder for canvas content -->
-      <p>Welcome to the Canvas! Start by adding a component.</p>
+      <!-- Display content based on the active tab -->
+      <p v-if="activeTab">You're viewing {{ getActiveTabName() }}</p>
+      <p v-else>Welcome to the Canvas! Start by adding a component.</p>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'CanvasMain',
+  name: "CanvasMain",
   data() {
     return {
-      tabs: [],  // Array to hold tab data
-      activeTab: null,  // Current active tab
-      components: []  // Components within the canvas
+      tabs: [
+        { id: 1, name: "Tab 1", components: [] } // Example initial tab
+      ],
+      activeTab: 1, // ID of the currently active tab
+      nextTabId: 2 // ID for the next new tab
     };
   },
   methods: {
     addTab() {
-      // Logic to add a new tab
+      const newTab = {
+        id: this.nextTabId,
+        name: `Tab ${this.nextTabId}`,
+        components: []
+      };
+      this.tabs.push(newTab);
+      this.activeTab = newTab.id; // Automatically switch to the new tab
+      this.nextTabId++;
+    },
+    setActiveTab(tabId) {
+      this.activeTab = tabId;
+    },
+    getActiveTabName() {
+      const activeTab = this.tabs.find(tab => tab.id === this.activeTab);
+      return activeTab ? activeTab.name : "";
     },
     addComponent(componentType) {
-      // Logic to add a component to the canvas
       console.log(componentType);
     }
   }
@@ -49,6 +77,20 @@ export default {
   display: flex;
   align-items: center;
   padding-left: 10px;
+  margin-bottom: 10px;
+}
+
+.tab {
+  padding: 10px;
+  cursor: pointer;
+  border: 1px solid #ddd;
+  margin-right: 5px;
+  background-color: #f5f5f5;
+}
+
+.tab.active {
+  background-color: #e9ecef;
+  font-weight: bold;
 }
 
 .canvas-content {
