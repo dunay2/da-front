@@ -26,7 +26,10 @@
           v-for="component in tabs.find(tab => tab.id === activeTab).components"
           :is="getComponentType(component.type)"
           :key="component.id"
-          :table="component.data"
+          :table="component"
+          @update-position="updateComponentPosition"
+          @update-size="updateComponentSize"
+          @open-config="openComponentConfig"
         />
       </div>
       <p v-else>Welcome to the Canvas! Start by adding a component.</p>
@@ -34,6 +37,14 @@
 
     <!-- Add the Floating Menu here -->
     <FloatingMenu @add-component="addComponent" />
+
+    <!-- Add a modal for component configuration -->
+    <div v-if="selectedComponent" class="modal">
+      <h2>Configure {{ selectedComponent.type }}</h2>
+      <input v-model="selectedComponent.data.name" placeholder="Component Name" />
+      <!-- Add other configuration options here -->
+      <button @click="closeModal">Close</button>
+    </div>
   </div>
 </template>
 
@@ -54,7 +65,8 @@ export default {
         { id: 1, name: "Tab 1", components: [] } // Example initial tab
       ],
       activeTab: 1, // ID of the currently active tab
-      nextTabId: 2 // ID for the next new tab
+      nextTabId: 2, // ID for the next new tab
+      selectedComponent: null // Holds the currently selected component for configuration
     };
   },
   methods: {
@@ -70,6 +82,7 @@ export default {
     },
     setActiveTab(tabId) {
       this.activeTab = tabId;
+      this.selectedComponent = null; // Reset selected component when switching tabs
     },
     getActiveTabName() {
       const activeTab = this.tabs.find(tab => tab.id === this.activeTab);
@@ -82,17 +95,22 @@ export default {
         const newComponent = {
           id: `comp-${Date.now()}`,
           type: componentType,
-          data: {}
+          data: {
+            x: 0,  // Initial X position
+            y: 0,  // Initial Y position
+            w: 300, // Initial width
+            h: 150, // Initial height
+            name: '',
+            columns: []
+          }
         };
         if (componentType === 'Table') {
-          newComponent.data = {
-            name: `Table ${activeTab.components.length + 1}`,
-            columns: [
-              { name: 'id', type: 'int' },
-              { name: 'name', type: 'varchar' },
-              { name: 'created_at', type: 'timestamp' }
-            ]
-          };
+          newComponent.data.name = `Table ${activeTab.components.length + 1}`;
+          newComponent.data.columns = [
+            { name: 'id', type: 'int' },
+            { name: 'name', type: 'varchar' },
+            { name: 'created_at', type: 'timestamp' }
+          ];
         }
         activeTab.components.push(newComponent);
       }
@@ -104,6 +122,28 @@ export default {
         default:
           return null;
       }
+    },
+    updateComponentPosition(componentId, x, y) {
+      const activeTab = this.tabs.find(tab => tab.id === this.activeTab);
+      const component = activeTab.components.find(c => c.id === componentId);
+      if (component) {
+        component.data.x = x;
+        component.data.y = y;
+      }
+    },
+    updateComponentSize(componentId, w, h) {
+      const activeTab = this.tabs.find(tab => tab.id === this.activeTab);
+      const component = activeTab.components.find(c => c.id === componentId);
+      if (component) {
+        component.data.w = w;
+        component.data.h = h;
+      }
+    },
+    openComponentConfig(component) {
+      this.selectedComponent = component;
+    },
+    closeModal() {
+      this.selectedComponent = null;
     }
   }
 };
