@@ -7,16 +7,30 @@ export default {
   components: {
     VueDraggableResizable
   },
-  setup(props) {
-    const {      
-      id,
-      nombre,
-      estado,
-      positionX,
-      positionY,
-      color,
+  
+  props: {
+    initialId: {
+      type: String,
+      required: true  // Asegúrate de que se pase un id
+    },
+    initialPosition: {
+      type: Object,
+      required: true
+    }
+  },
+  setup(props,{ emit }) {
+
+    //const {      
+     // id,
+     // nombre,
+     // estado,
+     // positionX,
+      //positionY,
+      //color,
       //propiedades
-    } = useCommonProperties( props.initialPosition);
+    //} = useCommonProperties( props.initialPosition);
+
+    const { id, positionX, positionY } = useCommonProperties(props.initialId, props.initialPosition);
 
     const onDrag = (x, y) => {
       console.log('Drag event triggered');
@@ -25,15 +39,21 @@ export default {
       positionY.value = y;
     };
 
+    const selectNode = () => {
+      console.log('Click! ' + id.value);
+      emit('select-node', id.value);
+    };
+
     return {
       id,
-      nombre,
-      estado,
+      //nombre,
+      //estado,
      // propiedades,
       positionX,
       positionY,
-      color,
-      onDrag
+      //color,
+      onDrag,
+      selectNode
     };
   }
 };

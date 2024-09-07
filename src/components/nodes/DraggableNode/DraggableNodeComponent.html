@@ -7,6 +7,7 @@
     :minw="50"
     :minh="50"
     @dragging="onDrag"
+    @click="selectNode"
   >
   <h3>Nombre: {{ nombre }}</h3>
   <p>ID es: {{ id }}</p>
@@ -14,7 +15,3 @@
   <p>Estado: {{ estado }}</p>
   <p>Color: {{ color }}</p>
   </vue-draggable-resizable>
-
-
-  
-

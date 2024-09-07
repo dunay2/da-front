@@ -1,30 +1,30 @@
 <div class="tab-container">
-    <div class="tabs">
-      <div v-for="(tab, index) in tabs" 
-           :key="index" 
-           @click="selectTab(index)"
-           :class="{ active: activeTab === index }">
-        {{ tab.name }}
-        <button @click.stop="removeTab(index)">X</button>
-      </div>
-      <button @click="addTab">+</button>
+  <div class="tabs">
+    <div v-for="(tab, index) in tabs" 
+         :key="index" 
+         @click="selectTab(index)"
+         :class="{ active: activeTab === index }">
+      {{ tab.name }}
+      <button @click.stop="removeTab(index)">X</button>
     </div>
+    <button @click="addTab">+</button>
+  </div>
+  
+  <!-- Contenedor principal dividido para la paleta y el lienzo -->
+  <div class="main-content">
+    <!-- Paleta de Nodos -->
+    <NodePalette @add-node="addNodeToCanvas" />
+  
+    <!-- Lienzo para los componentes -->      
+    <div class="canvas">
+      <!-- Verificar los nodos en la consola -->
+      <p v-if="true" style="display:none;"> <!-- Solo para activar el watch y no afectar la UI -->
+        {{ logNodes() }}
+      </p>
     
-    <!-- Contenedor principal dividido para la paleta y el lienzo -->
-    <div class="main-content">
-      <!-- Paleta de Nodos -->
-      <NodePalette @add-node="addNodeToCanvas" />
-    
-      <!-- Lienzo para los componentes -->      
-      <div class="canvas">
-        <!-- Verificar los nodos en la consola -->
-        <p v-if="true" style="display:none;"> <!-- Solo para activar el watch y no afectar la UI -->
-          {{ logNodes() }}
-        </p>
-      
-        <!-- Renderiza solo los nodos de la pestaña activa -->
+      <!-- Renderiza solo los nodos de la pestaña activa -->
         <component
-          v-for="(node, index) in tabs[activeTab].nodes"
+          v-for="(node, index) in Array.from(nodes.values())"
           :key="node.id"
           :is="node.type"
           :initial-id="node.id"
@@ -33,28 +33,14 @@
           :color="node.color"
           :estado="node.estado"
           :style="{ top: node.position.y + 'px', left: node.position.x + 'px' }"
+          @select-node="handleNodeSelected"
         />
-      </div>
-      <!-- Panel de Propiedades -->
-    <div class="properties-panel" v-if="selectedNode">
-      <h3>Propiedades del Nodo</h3>
-      <form @submit.prevent="updateNodeProperties">
-        <label>Nombre:
-          <input v-model="selectedNode.nombre" />
-        </label>
-        <label>Posición X:
-          <input v-model.number="selectedNode.positionX" />
-        </label>
-        <label>Posición Y:
-          <input v-model.number="selectedNode.positionY" />
-        </label>
-        <label>Color:
-          <input type="color" v-model="selectedNode.color" />
-        </label>
-        <button type="submit">Actualizar</button>
-      </form>
     </div>
-      
-    </div>
+        <!-- Panel de propiedades -->
+    <PropertiesPanel
+      v-if="selectedNode"
+      :node="selectedNode"
+      @update-node="updateNodeProperties"
+    />     
   </div>
-  
+</div>

@@ -1,0 +1,20 @@
+  <div class="properties-panel" v-if="selectedNode">
+    <h3>Propiedades del Nodo</h3>
+    <form @submit.prevent="updateNodeProperties">
+      <label>Nombre:
+        <input v-model="selectedNode.nombre" />
+      </label>
+      <label>Posición X:
+        <input v-model.number="selectedNode.positionX" />
+      </label>
+      <label>Posición Y:
+        <input v-model.number="selectedNode.positionY" />
+      </label>
+      <label>Color:
+        <input type="color" v-model="selectedNode.color" />
+      </label>
+      <button type="submit">Actualizar</button>
+    </form>
+  </div>
+  
+  

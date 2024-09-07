@@ -1,9 +1,9 @@
 import { reactive, toRefs, ref } from 'vue';
 
-export function useCommonProperties( initialPosition = { x: 10, y: 10 }) {
+export function useCommonProperties( initialId , initialPosition = { x: 10, y: 10 }) {
 const state = reactive({
-    id: `node-${Date.now()}`,
-    nombre: '',
+    id: initialId,
+    nombre: 'pepe',
     estado: {
         activo: true,
         visible: true,

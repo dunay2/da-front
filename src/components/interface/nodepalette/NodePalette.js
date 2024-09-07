@@ -1,3 +1,4 @@
+//NodePalette.js
 import { loadNodes } from '../../../utils/loadNodes';
 
 export default {
@@ -13,7 +14,15 @@ export default {
   },
   methods: {
     addNode(node) {
-      this.$emit('add-node', node);
+      try {
+        if (!node || !node.type || !node.name) {
+          throw new Error('El nodo está mal definido');
+        }
+        console.log('Añadiendo nodo al canvas:', node);  // Asegúrate de que el nodo se vea correctamente antes de emitirlo.
+        this.$emit('add-node', node);
+      } catch (error) {
+        console.error('Error al agregar nodo al canvas:', error.message);
+      }
     }
   }
 };
