@@ -1,0 +1,6 @@
+<div class="node-palette">
+  <h3>Node Palette</h3>
+  <div v-for="node in nodes" :key="node.type" class="node-item" @click="addNode(node)">
+    {{ node.name }}
+  </div>
+</div>

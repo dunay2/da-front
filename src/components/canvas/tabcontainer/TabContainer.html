@@ -1,0 +1,42 @@
+<div class="tab-container">
+    <div class="tabs">
+      <div v-for="(tab, index) in tabs" 
+           :key="index" 
+           @click="selectTab(index)"
+           :class="{ active: activeTab === index }">
+        {{ tab.name }}
+        <button @click.stop="removeTab(index)">X</button>
+      </div>
+      <button @click="addTab">+</button>
+    </div>
+    
+    <!-- Contenedor principal dividido para la paleta y el lienzo -->
+    <div class="main-content">
+      <!-- Paleta de Nodos -->
+      <NodePalette @add-node="addNodeToCanvas" />
+    
+      <!-- Lienzo para los componentes -->
+      
+
+      <div class="canvas">
+        <!-- Verificar los nodos en la consola -->
+        <p v-if="true" style="display:none;"> <!-- Solo para activar el watch y no afectar la UI -->
+          {{ logNodes() }}
+        </p>
+      
+        <!-- Renderiza solo los nodos de la pestaña activa -->
+        <component
+          v-for="(node, index) in tabs[activeTab].nodes"
+          :key="node.id"
+          :is="node.type"
+          :initial-id="node.id"
+          :nombre="node.nombre"
+          :initial-position="{ x: node.position.x, y: node.position.y }"
+          :color="node.color"
+          :estado="node.estado"
+          :style="{ top: node.position.y + 'px', left: node.position.x + 'px' }"
+        />
+      </div>          
+    </div>
+  </div>
+  

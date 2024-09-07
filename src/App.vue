@@ -1,16 +1,16 @@
 <template>
   <div id="app">
-    <CanvasMain />
+    <TabContainer />
   </div>
 </template>
 
 <script>
-import CanvasMain from './components/CanvasMain.vue';
+import TabContainer from './components/canvas/tabcontainer/TabContainer.vue';
 
 export default {
   name: 'App',
   components: {
-    CanvasMain
+    TabContainer
   }
 }
 </script>

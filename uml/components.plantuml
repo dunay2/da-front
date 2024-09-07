@@ -1,0 +1,35 @@
+@startuml
+' Definir los componentes principales
+
+component "App" {
+  component "TabContainer" {
+    [Tabs] --> [Canvas]
+    component "Tabs" as Tabs
+    component "Canvas" as Canvas {
+      component "DraggableComponent" as DraggableComponent
+      component "DerivedComponent" as DerivedComponent
+      DraggableComponent <|-- DerivedComponent
+    }
+  }
+}
+
+' Relaciones entre componentes
+App --> TabContainer
+TabContainer --> Tabs
+TabContainer --> Canvas
+Canvas --> DraggableComponent
+
+' Anotaciones adicionales
+note right of DraggableComponent
+  DraggableComponent maneja la lógica
+  de arrastre y soltado, incluyendo
+  restricciones de movimiento y
+  la persistencia de la posición.
+end note
+
+note right of DerivedComponent
+  DerivedComponent extiende DraggableComponent
+  y añade funcionalidad específica.
+end note
+
+@enduml

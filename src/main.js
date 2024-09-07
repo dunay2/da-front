@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import router from './router'; 
-import '../node_modules/vue-draggable-resizable/dist/style.css';
+import VueDraggableResizable from 'vue-draggable-resizable'
 
-createApp(App).use(router).mount('#app'); 
+createApp(App)
+  .component("vue-draggable-resizable", VueDraggableResizable)
+  .mount('#app')

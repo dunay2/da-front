@@ -1,0 +1,14 @@
+<vue-draggable-resizable
+v-model:x="positionX"
+v-model:y="positionY"
+  :w="100"
+  :h="100"
+  :minw="50"
+  :minh="50"
+  @dragging="onDrag"
+>
+  <h3>{{ nombre }}</h3>
+  <p>ID: {{ id }}</p>
+  <p>Position: {{ positionX }}, {{ positionY }}</p>
+  <p>Estado: {{ estado }}</p>
+</vue-draggable-resizable>

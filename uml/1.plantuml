@@ -1,0 +1,68 @@
+@startuml
+
+component "App" {
+  component "TabContainer" {
+    [Tabs] --> [Canvas]
+    component "Tabs" as Tabs
+    component "Canvas" as Canvas {
+      ' BaseComponente define propiedades comunes
+      component "BaseComponent" as BaseComponent {
+        + id: String
+        + nombre: String
+        + estado: Object
+        + propiedades: Map<String, Object>
+      }
+
+      ' Componente que se puede mover
+      component "DraggableComponent" as DraggableComponent {
+        + mover(): void
+      }
+      
+      ' Componente que no se puede mover
+      component "StaticComponent" as StaticComponent
+
+      ' Herencia de la base común
+      BaseComponent <|-- DraggableComponent
+      BaseComponent <|-- StaticComponent
+
+      ' Ejemplos específicos
+      DraggableComponent <|-- ViewComponent
+      StaticComponent <|-- TableComponent
+    }
+  }
+}
+' Definir los componentes principales
+
+
+' Relaciones entre componentes
+App --> TabContainer
+TabContainer --> Tabs
+TabContainer --> Canvas
+Canvas --> BaseComponent
+Canvas --> DraggableComponent
+Canvas --> StaticComponent
+Canvas --> ViewComponent
+Canvas --> TableComponent
+
+' Anotaciones adicionales
+note right of BaseComponent
+  BaseComponent define propiedades comunes:
+  - id: Identificador único.
+  - nombre: Nombre del componente.
+  - estado: Estado del componente.
+  - propiedades: Conjunto de propiedades adicionales.
+end note
+
+note right of DraggableComponent
+  DraggableComponent extiende BaseComponent
+  y añade la capacidad de moverse.
+  Ejemplo: ViewComponent.
+end note
+
+note right of StaticComponent
+  StaticComponent extiende BaseComponent
+  pero no puede moverse.
+  Ejemplo: TableComponent.
+end note
+
+@enduml

@@ -1,0 +1,81 @@
+@startuml ""
+!define RECTANGLE Rectangle
+
+' Definir los componentes principales de la arquitectura
+
+component "App" {
+  
+  component "TabContainer" {
+    [Tabs] --> [Canvas]
+    
+    component "Tabs" as Tabs
+    
+    component "Canvas" as Canvas {
+      ' Uso de Composition API para propiedades compartidas
+      RECTANGLE "useCommonProperties()" as useCommonProperties
+      
+      ' Componente para manejar nodos y flujo de datos
+      component "NodeComponent" as NodeComponent {
+'        + entradas: Array
+'        + salidas: Array
+'        + processFlow(): ComputedProperty
+      }
+      
+      ' Uso de Vue Draggable Resize para nodos arrastrables
+      component "DraggableResizableNode" as DraggableResizableNode
+      
+      ' Integración con Vuex para la gestión del estado
+      component "VuexStore" as VuexStore
+      
+      ' Uso de LocalStorage para persistir el estado
+      component "LocalStorage" as LocalStorage
+      
+      ' Observación de cambios con Watch y Computed
+      RECTANGLE "watch()" as Watch
+      RECTANGLE "computed()" as Computed
+    }
+  }
+}
+
+' Relaciones entre componentes
+App --> TabContainer
+TabContainer --> Tabs
+TabContainer --> Canvas
+Canvas --> NodeComponent
+NodeComponent --> DraggableResizableNode
+NodeComponent --> Computed
+NodeComponent --> Watch
+
+' Manejo de estado
+App --> VuexStore
+VuexStore --> LocalStorage
+
+' Integración de Composition API
+NodeComponent --> useCommonProperties
+
+' Uso de bibliotecas de terceros
+DraggableResizableNode --> [Vue Draggable Resize]
+
+' Anotaciones adicionales
+note right of useCommonProperties
+  Definición de propiedades compartidas 
+  como id, nombre, estado, etc.
+end note
+
+note right of DraggableResizableNode
+  Este componente utiliza bibliotecas 
+  de terceros para arrastre y redimensionamiento.
+end note
+
+note right of NodeComponent
+  Este componente gestiona entradas y salidas, 
+  y utiliza propiedades computadas y watchers 
+  para manejar el flujo de datos reactivo.
+end note
+
+note bottom of VuexStore
+  Vuex se utiliza para la gestión global del estado,
+  con persistencia en LocalStorage.
+end note
+
+@enduml

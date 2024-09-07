@@ -1,0 +1,15 @@
+.draggable.resizable.vdr {
+  border: 2px solid #007bff; /* Borde azul */
+  background-color: #e9f5ff; /* Fondo azul claro */
+  padding: 10px;
+  box-sizing: border-box;
+  border-radius: 4px; /* Bordes redondeados, opcional */
+}
+
+.draggable.resizable.vdr h3 {
+  color: #0056b3; /* Cambiar el color del texto del título */
+}
+
+.draggable.resizable.vdr p {
+  color: #0056b3; /* Cambiar el color del texto de la posición */
+}
