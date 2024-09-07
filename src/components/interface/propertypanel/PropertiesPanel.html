@@ -1,0 +1,31 @@
+    <div class="properties-panel" v-if="node">
+      <h3>Propiedades del Nodo</h3>
+      <div>
+        <label>ID:</label>
+        <span>{{ node.id }}</span>
+      </div>
+      <div>
+        <label>Nombre:</label>
+        <input v-model="node.nombre" placeholder="Nombre del nodo" />
+      </div>
+      <div>
+        <label>Color:</label>
+        <input type="color" v-model="node.color" />
+      </div>
+      <div>
+        <label>Posición X:</label>
+        <input type="number" v-model="node.positionX" />
+      </div>
+      <div>
+        <label>Posición Y:</label>
+        <input type="number" v-model="node.positionY" />
+      </div>
+      <div>
+        <label>Activo:</label>
+        <input type="checkbox" v-model="node.estado.activo" />
+      </div>
+      <div>
+        <label>Visible:</label>
+        <input type="checkbox" v-model="node.estado.visible" />
+      </div>
+    </div>  

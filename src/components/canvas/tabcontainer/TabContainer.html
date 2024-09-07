@@ -15,9 +15,7 @@
       <!-- Paleta de Nodos -->
       <NodePalette @add-node="addNodeToCanvas" />
     
-      <!-- Lienzo para los componentes -->
-      
-
+      <!-- Lienzo para los componentes -->      
       <div class="canvas">
         <!-- Verificar los nodos en la consola -->
         <p v-if="true" style="display:none;"> <!-- Solo para activar el watch y no afectar la UI -->
@@ -36,7 +34,27 @@
           :estado="node.estado"
           :style="{ top: node.position.y + 'px', left: node.position.x + 'px' }"
         />
-      </div>          
+      </div>
+      <!-- Panel de Propiedades -->
+    <div class="properties-panel" v-if="selectedNode">
+      <h3>Propiedades del Nodo</h3>
+      <form @submit.prevent="updateNodeProperties">
+        <label>Nombre:
+          <input v-model="selectedNode.nombre" />
+        </label>
+        <label>Posición X:
+          <input v-model.number="selectedNode.positionX" />
+        </label>
+        <label>Posición Y:
+          <input v-model.number="selectedNode.positionY" />
+        </label>
+        <label>Color:
+          <input type="color" v-model="selectedNode.color" />
+        </label>
+        <button type="submit">Actualizar</button>
+      </form>
+    </div>
+      
     </div>
   </div>
   
